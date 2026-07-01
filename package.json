@@ -1,0 +1,41 @@
+{
+  "name": "base-game-migration",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Move existing games and game-like apps to Base with payment verification, internal balances, entitlements, and Builder Code attribution.",
+  "license": "MIT",
+  "author": "horn111 <https://github.com/horn111>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/horn111/base-game-migration.git"
+  },
+  "bugs": {
+    "url": "https://github.com/horn111/base-game-migration/issues"
+  },
+  "homepage": "https://github.com/horn111/base-game-migration#readme",
+  "keywords": [
+    "base",
+    "base-pay",
+    "base-game-migration",
+    "game-migration",
+    "entitlements",
+    "credits",
+    "tickets",
+    "builder-codes",
+    "attribution",
+    "onchain",
+    "web3"
+  ],
+  "packageManager": "pnpm@9.15.4",
+  "engines": {
+    "node": ">=20.11"
+  },
+  "scripts": {
+    "format": "prettier --check .",
+    "format:write": "prettier --write .",
+    "check": "pnpm format"
+  },
+  "devDependencies": {
+    "prettier": "^3.4.2"
+  }
+}
