@@ -1,0 +1,15 @@
+{
+  "id": "nakama_order_1",
+  "playerId": "player_ada",
+  "catalogItemId": "starter-ticket-pack",
+  "itemTitle": "Starter Ticket Pack",
+  "price": {
+    "amount": "2.00",
+    "currency": "USDC"
+  },
+  "grant": {
+    "unit": "ticket",
+    "amount": 10
+  },
+  "status": "pending"
+}

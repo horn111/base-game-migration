@@ -1,0 +1,14 @@
+{
+  "userId": "player_ada",
+  "changeset": {
+    "bgm_ticket": 10
+  },
+  "metadata": {
+    "bgm_event_id": "evt_1",
+    "bgm_event_status": "applied",
+    "bgm_reason": "ticket_pack_fulfillment",
+    "bgm_source_id": "payment_1",
+    "bgm_unit": "ticket",
+    "bgm_balance_after": 10
+  }
+}

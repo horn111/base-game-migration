@@ -43,3 +43,14 @@ The first demo will be a planner, not a payment processor:
 - package catalog
 - verification checklist
 - BAO attribution step
+
+## Alpha announcement
+
+Base Game Migration alpha is becoming a working ticket-pack demo:
+
+- Nakama-first backend shape
+- mock Base Pay order and completion
+- replay-safe fulfillment
+- in-game ticket ledger
+- spend ticket flow
+- Builder Code attribution preview through BAO

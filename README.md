@@ -3,8 +3,8 @@
 Move existing games to Base with payment verification, in-game balances,
 entitlements, and Builder Code attribution.
 
-Status: product scaffold for a separate game migration product. This repo is
-docs-first until the first installable runtime primitives are implemented.
+Status: alpha implementation in progress. The repo now includes runtime
+packages, a Nakama-first adapter, and a Vercel-deployable ticket-pack demo.
 
 ## Positioning
 
@@ -46,23 +46,63 @@ https://github.com/horn111/base-attribution-os
 
 ```txt
 base-game-migration/
-+-- README.md
-`-- docs/
-    +-- game-migration-rfc.md
-    +-- roadmap.md
-    `-- launch/
-        `-- x-posts.md
++-- apps/
+|   `-- demo/
++-- packages/
+|   +-- payments-core/
+|   +-- entitlements-core/
+|   `-- nakama-adapter/
++-- examples/
+|   `-- nakama-ticket-packs/
++-- docs/
+`-- README.md
 ```
+
+## Alpha flow
+
+```txt
+ticket pack catalog
+  -> mock Base Pay order
+  -> mock payment completion
+  -> server-side verification
+  -> idempotent fulfillment
+  -> in-game ticket ledger credit
+  -> ticket spend
+  -> Builder Code attribution preview
+```
+
+## Packages
+
+- `@base-game-migration/payments-core`: catalog, order creation, mock payment
+  verification, fulfillment, and Builder Code attribution intent.
+- `@base-game-migration/entitlements-core`: in-game ledger, ticket balances,
+  idempotent credits, debits, and audit events.
+- `@base-game-migration/nakama-adapter`: maps BGM ledger events to Nakama wallet
+  updates and stable RPC names.
+
+## Quickstart
+
+```bash
+pnpm install
+pnpm check
+pnpm --filter @base-game-migration/demo dev
+```
+
+The demo starts with the working ticket-pack flow. Create an order, complete the
+mock payment, fulfill it, retry fulfillment to prove duplicate protection, then
+spend a ticket.
+
+## Vercel demo
+
+Create the Vercel project with `apps/demo` as the project root directory. Alpha
+mock mode does not require secrets.
 
 ## Next step
 
-The first runtime update should introduce small installable primitives before
-full adapters:
+The next runtime update should replace mock-only payment verification with a
+real Base Pay boundary while preserving the current core interfaces:
 
-- `payments-core`: order creation, payment status verification, idempotent
-  fulfillment events.
-- `entitlements-core`: internal credits, tickets, unlocks, balance reads, and
-  consumption events.
-- `nakama-adapter`: first game backend adapter.
-- Future game backend recipes: custom authoritative servers, Colyseus, Unity
-  Gaming Services, and PlayFab-style ledger integrations.
+- durable payment-id uniqueness;
+- durable ledger storage;
+- real BAO `createDataSuffix` / `appendDataSuffix` integration;
+- Nakama runtime module packaging.

@@ -33,11 +33,29 @@
     "node": ">=20.11"
   },
   "scripts": {
+    "build": "pnpm -r --workspace-concurrency=1 build",
+    "clean": "pnpm -r --workspace-concurrency=1 clean",
+    "dev": "pnpm --filter @base-game-migration/demo dev",
+    "lint": "eslint . --max-warnings=0",
     "format": "prettier --check .",
     "format:write": "prettier --write .",
-    "check": "pnpm format"
+    "test": "pnpm -r --workspace-concurrency=1 test",
+    "test:watch": "vitest",
+    "typecheck": "pnpm -r --workspace-concurrency=1 typecheck",
+    "check": "pnpm lint && pnpm typecheck && pnpm test && pnpm build"
   },
   "devDependencies": {
-    "prettier": "^3.4.2"
+    "@eslint/js": "^9.17.0",
+    "@types/node": "^22.10.5",
+    "@types/react": "^19.2.4",
+    "@types/react-dom": "^19.2.3",
+    "eslint": "^9.17.0",
+    "prettier": "^3.4.2",
+    "rimraf": "^6.0.1",
+    "tsup": "^8.3.5",
+    "turbo": "^2.3.3",
+    "typescript": "^5.7.2",
+    "typescript-eslint": "8.60.1",
+    "vitest": "^2.1.8"
   }
 }

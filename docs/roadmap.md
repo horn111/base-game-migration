@@ -16,6 +16,8 @@
   consumption events.
 - Example package catalog format.
 - Server verification checklist and fixture tests.
+- Vercel alpha demo for ticket-pack order, mock payment, fulfillment, duplicate
+  retry, and ticket spend.
 
 ## v0.2 adapters
 
