@@ -3,7 +3,7 @@
 ## MVP scaffold
 
 - Product README.
-- App and game migration RFC.
+- Game migration RFC.
 - Launch copy for the extracted product.
 - Clear dependency on Base Attribution OS for Builder Code attribution and CI
   validation.
@@ -20,13 +20,13 @@
 ## v0.2 adapters
 
 - Nakama adapter for game ticket packs and internal wallet ledger fulfillment.
-- Next.js route handler examples for app credit packs.
-- Supabase SQL and edge function recipe.
-- Hono or Express middleware for custom APIs.
+- Custom authoritative game server recipe.
+- Colyseus room and player-state integration notes.
+- Unity Gaming Services and PlayFab-style economy handoff notes.
 
 ## v0.3 public pilots
 
-- Migrate one self-owned app or game.
+- Migrate one self-owned game or playable prototype.
 - Publish a before/after integration report.
 - Show how BAO validates the Builder Code attribution layer.
 - Turn the migration into repeatable demo content.

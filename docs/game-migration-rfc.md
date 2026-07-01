@@ -1,19 +1,19 @@
-# Game and App Migration Layer RFC
+# Game Migration Layer RFC
 
 Status: draft for Base Game Migration.
 
 Base Game Migration is a companion product to Base Attribution OS. BAO should
 stay attribution-first: Builder Codes, ERC-8021, x402 scanner support, SDK
 helpers, CLI, and CI enforcement. Base Game Migration owns the migration and
-monetization workflow for existing games and game-like products moving to Base.
+monetization workflow for existing games moving to Base.
 
 ## Target workflow
 
 ```txt
-existing app or game
+existing game
   -> Base Pay purchase
   -> server-side verification
-  -> internal credits, tickets, or entitlements
+  -> internal tickets, soft currency, or entitlements
   -> Builder Code attribution through BAO
   -> measurable Base activity
 ```
@@ -22,19 +22,13 @@ existing app or game
 
 - Game developers who want to replace ad placements or platform payments with
   tickets, boosts, chests, lives, or cosmetic unlocks.
-- Existing app developers who want paid features, usage credits, premium
-  exports, or community access on Base.
-- AI and tool builders who want users to buy credit packs with USDC.
-- Base ecosystem teams that want more apps shipping measurable onchain activity.
+- Live-ops teams that want soft currency packs, seasonal passes, or limited
+  entitlement drops paid with USDC on Base.
+- Existing game backend teams that want Base-native purchases without replacing
+  their authoritative server, player accounts, or inventory system.
+- Base ecosystem teams that want more games shipping measurable onchain
+  activity.
 - Growth teams that need a repeatable migration checklist, not a blank docs tab.
-
-## App use cases
-
-- AI credits for generations, analysis, or agent runs.
-- Paid exports for documents, videos, images, reports, or datasets.
-- Premium features that unlock once per account.
-- Usage packs for API calls or workspace actions.
-- Community passes or creator tools gated by an internal entitlement.
 
 ## Game use cases
 
@@ -50,9 +44,9 @@ existing app or game
    verify payment status, and produce replay-safe fulfillment events.
 2. `entitlements-core`: define internal units such as credits, tickets, and
    unlocks, then track balances and consumption events.
-3. Adapters: connect the shared core to real backends. The first game adapter
-   should target Nakama. App adapters can follow for Next.js, Hono, Express, and
-   Supabase.
+3. Adapters: connect the shared core to real game backends. The first adapter
+   should target Nakama. Additional recipes can follow for authoritative custom
+   servers, Colyseus, Unity Gaming Services, and PlayFab-style ledger systems.
 
 ## Server-side rules
 
@@ -85,11 +79,12 @@ The Nakama adapter should focus on the missing Base-specific layer:
 - expose `get_balance` and `spend` RPCs;
 - preserve Builder Code attribution for the onchain purchase through BAO.
 
-For apps, the same core can support lighter adapters:
+Future adapters should stay game-backend focused:
 
-- Next.js route handlers for small web apps.
-- Hono or Express middleware for custom APIs.
-- Supabase SQL and edge function recipes for fast product teams.
+- authoritative Node, Go, or Rust game servers;
+- Colyseus room and player-state workflows;
+- Unity Gaming Services inventory and economy handoff;
+- PlayFab-style virtual currency and inventory ledgers.
 
 ## Non-goals
 
@@ -105,5 +100,4 @@ For apps, the same core can support lighter adapters:
 
 The first demo should preview this workflow without processing real payments. It
 should generate a migration plan, a sample package catalog, a server
-verification checklist, and the Builder Code attribution step for both apps and
-games.
+verification checklist, and the Builder Code attribution step for a game.

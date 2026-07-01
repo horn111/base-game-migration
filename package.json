@@ -2,7 +2,7 @@
   "name": "base-game-migration",
   "version": "0.0.0",
   "private": true,
-  "description": "Move existing games and game-like apps to Base with payment verification, internal balances, entitlements, and Builder Code attribution.",
+  "description": "Move existing games to Base with payment verification, in-game balances, entitlements, and Builder Code attribution.",
   "license": "MIT",
   "author": "horn111 <https://github.com/horn111>",
   "repository": {
@@ -18,6 +18,8 @@
     "base-pay",
     "base-game-migration",
     "game-migration",
+    "game-backend",
+    "liveops",
     "entitlements",
     "credits",
     "tickets",

@@ -1,7 +1,7 @@
 # Base Game Migration
 
-Move existing games and game-like apps to Base with payment verification,
-internal product balances, entitlements, and Builder Code attribution.
+Move existing games to Base with payment verification, in-game balances,
+entitlements, and Builder Code attribution.
 
 Status: product scaffold for a separate game migration product. This repo is
 docs-first until the first installable runtime primitives are implemented.
@@ -9,14 +9,14 @@ docs-first until the first installable runtime primitives are implemented.
 ## Positioning
 
 Base Game Migration is a companion product for teams that already have a
-working game, game backend, app, AI tool, or community product and want a
-practical path to Base-native monetization without rebuilding the whole backend.
+working game or game backend and want a practical path to Base-native
+monetization without rebuilding their server stack.
 
 ```txt
-existing app or game
+existing game
   -> Base Pay purchase
   -> server-side verification
-  -> internal credits, tickets, or entitlements
+  -> internal tickets, soft currency, or entitlements
   -> Builder Code attribution
   -> measurable Base activity
 ```
@@ -28,10 +28,10 @@ https://github.com/horn111/base-attribution-os
 
 - Game developers adding tickets, continues, boosts, chests, lives, or cosmetic
   unlocks.
-- App developers adding paid exports, AI credits, usage packs, or premium
-  features.
-- Existing backend teams that want Base payments without replacing their server.
-- Base ecosystem teams that want more migration paths from Web2 apps into
+- Live-ops teams adding soft currency packs or non-withdrawable game balances.
+- Existing game backend teams that want Base payments without replacing their
+  server.
+- Base ecosystem teams that want more migration paths from Web2 games into
   measurable onchain activity.
 
 ## Non-goals
@@ -48,7 +48,7 @@ https://github.com/horn111/base-attribution-os
 base-game-migration/
 +-- README.md
 `-- docs/
-    +-- app-and-game-migration-rfc.md
+    +-- game-migration-rfc.md
     +-- roadmap.md
     `-- launch/
         `-- x-posts.md
@@ -64,4 +64,5 @@ full adapters:
 - `entitlements-core`: internal credits, tickets, unlocks, balance reads, and
   consumption events.
 - `nakama-adapter`: first game backend adapter.
-- Future app adapters: Next.js, Hono/Express, Supabase.
+- Future game backend recipes: custom authoritative servers, Colyseus, Unity
+  Gaming Services, and PlayFab-style ledger integrations.
