@@ -1,5 +1,6 @@
 import {
   createInMemoryLedgerStore,
+  type LedgerEvent,
   type LedgerStore,
 } from "@base-game-migration/entitlements-core";
 import {
@@ -41,10 +42,20 @@ export interface DemoSnapshot {
   latestPayment?: MockPayment;
 }
 
-interface DemoStore {
+export interface DemoStore {
   ledger: LedgerStore;
   orders: Map<string, GameOrder>;
   payments: Map<string, MockPayment>;
+  log: DemoLogEntry[];
+  orderCounter: number;
+  paymentCounter: number;
+  spendCounter: number;
+}
+
+export interface SerializedDemoStore {
+  ledgerEvents: LedgerEvent[];
+  orders: GameOrder[];
+  payments: MockPayment[];
   log: DemoLogEntry[];
   orderCounter: number;
   paymentCounter: number;
@@ -82,6 +93,60 @@ function createDemoStore(): DemoStore {
   };
 }
 
+export function createDemoStoreFromState(state?: SerializedDemoStore): DemoStore {
+  const store = createDemoStore();
+
+  if (!state) {
+    return store;
+  }
+
+  store.orderCounter = state.orderCounter;
+  store.paymentCounter = state.paymentCounter;
+  store.spendCounter = state.spendCounter;
+  store.log = state.log;
+
+  for (const order of state.orders) {
+    store.orders.set(order.id, order);
+  }
+
+  for (const payment of state.payments) {
+    store.payments.set(payment.id, payment);
+  }
+
+  for (const event of state.ledgerEvents) {
+    const input = {
+      playerId: event.playerId,
+      unit: event.unit,
+      amount: event.amount,
+      reason: event.reason,
+      sourceId: event.sourceId,
+      idempotencyKey: event.idempotencyKey,
+      now: new Date(event.createdAt),
+    };
+
+    if (event.direction === "credit") {
+      store.ledger.creditBalance(input);
+    } else {
+      store.ledger.spendBalance(input);
+    }
+  }
+
+  normalizeDemoStore(store);
+  return store;
+}
+
+export function serializeDemoStore(store: DemoStore): SerializedDemoStore {
+  return {
+    ledgerEvents: store.ledger.listEvents().slice(-12),
+    orders: [...store.orders.values()].slice(-3),
+    payments: [...store.payments.values()].slice(-3),
+    log: store.log.slice(0, 8),
+    orderCounter: store.orderCounter,
+    paymentCounter: store.paymentCounter,
+    spendCounter: store.spendCounter,
+  };
+}
+
 function normalizeDemoStore(store: DemoStore) {
   for (const [orderId, order] of store.orders) {
     if (
@@ -111,14 +176,15 @@ export function resetDemoStore() {
   return getDemoSnapshot(players[0]!.id);
 }
 
-function pushLog(entry: Omit<DemoLogEntry, "id">) {
-  const store = getDemoStore();
+function pushLog(store: DemoStore, entry: Omit<DemoLogEntry, "id">) {
   const nextId = `log_${(store.log.length + 1).toString().padStart(4, "0")}`;
   store.log = [{ id: nextId, ...entry }, ...store.log].slice(0, 8);
 }
 
-export function getDemoSnapshot(playerId = players[0]!.id): DemoSnapshot {
-  const store = getDemoStore();
+export function getDemoSnapshot(
+  playerId = players[0]!.id,
+  store: DemoStore = getDemoStore(),
+): DemoSnapshot {
   const orders = [...store.orders.values()];
   const payments = [...store.payments.values()];
   const latestOrder = orders.at(-1);
@@ -139,8 +205,11 @@ export function getDemoSnapshot(playerId = players[0]!.id): DemoSnapshot {
   };
 }
 
-export function createDemoOrder(playerId: string, catalogItemId: string) {
-  const store = getDemoStore();
+export function createDemoOrder(
+  playerId: string,
+  catalogItemId: string,
+  store: DemoStore = getDemoStore(),
+) {
   store.orderCounter += 1;
   store.paymentCounter += 1;
 
@@ -161,7 +230,7 @@ export function createDemoOrder(playerId: string, catalogItemId: string) {
 
   store.orders.set(order.id, order);
   store.payments.set(payment.id, payment);
-  pushLog({
+  pushLog(store, {
     label: "Order created",
     detail: `${order.itemTitle} reserved for ${order.playerId}.`,
     status: "pending",
@@ -170,12 +239,11 @@ export function createDemoOrder(playerId: string, catalogItemId: string) {
   return {
     order,
     payment,
-    snapshot: getDemoSnapshot(playerId),
+    snapshot: getDemoSnapshot(playerId, store),
   };
 }
 
-export function completeDemoPayment(orderId: string) {
-  const store = getDemoStore();
+export function completeDemoPayment(orderId: string, store: DemoStore = getDemoStore()) {
   const order = store.orders.get(orderId);
 
   if (!order) {
@@ -196,7 +264,7 @@ export function completeDemoPayment(orderId: string) {
   };
   store.orders.set(order.id, paidOrder);
   store.payments.set(payment.id, completedPayment);
-  pushLog({
+  pushLog(store, {
     label: "Mock payment completed",
     detail: `${completedPayment.amount} ${completedPayment.currency} marked completed.`,
     status: "completed",
@@ -205,12 +273,11 @@ export function completeDemoPayment(orderId: string) {
   return {
     order: paidOrder,
     payment: completedPayment,
-    snapshot: getDemoSnapshot(order.playerId),
+    snapshot: getDemoSnapshot(order.playerId, store),
   };
 }
 
-export function fulfillDemoOrder(orderId: string) {
-  const store = getDemoStore();
+export function fulfillDemoOrder(orderId: string, store: DemoStore = getDemoStore()) {
   const order = store.orders.get(orderId);
 
   if (!order) {
@@ -236,7 +303,7 @@ export function fulfillDemoOrder(orderId: string) {
     updatedAt: new Date().toISOString(),
   };
   store.orders.set(order.id, fulfilledOrder);
-  pushLog({
+  pushLog(store, {
     label:
       fulfillment.status === "duplicate_ignored"
         ? "Duplicate fulfillment ignored"
@@ -252,12 +319,11 @@ export function fulfillDemoOrder(orderId: string) {
     order: fulfilledOrder,
     payment,
     fulfillment,
-    snapshot: getDemoSnapshot(order.playerId),
+    snapshot: getDemoSnapshot(order.playerId, store),
   };
 }
 
-export function spendDemoTicket(playerId: string) {
-  const store = getDemoStore();
+export function spendDemoTicket(playerId: string, store: DemoStore = getDemoStore()) {
   store.spendCounter += 1;
 
   const result = store.ledger.spendBalance({
@@ -269,7 +335,7 @@ export function spendDemoTicket(playerId: string) {
     idempotencyKey: `demo_spend_${store.spendCounter.toString().padStart(4, "0")}`,
   });
 
-  pushLog({
+  pushLog(store, {
     label: result.status === "applied" ? "Ticket spent" : "Spend rejected",
     detail:
       result.status === "applied"
@@ -280,6 +346,6 @@ export function spendDemoTicket(playerId: string) {
 
   return {
     spend: result,
-    snapshot: getDemoSnapshot(playerId),
+    snapshot: getDemoSnapshot(playerId, store),
   };
 }

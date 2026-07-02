@@ -2,9 +2,12 @@ import { describe, expect, it } from "vitest";
 
 import {
   completeDemoPayment,
+  createDemoStoreFromState,
   createDemoOrder,
   fulfillDemoOrder,
+  getDemoSnapshot,
   resetDemoStore,
+  serializeDemoStore,
   spendDemoTicket,
 } from "../src/lib/demo-store";
 import { demoBuilderCode } from "../src/lib/demo-config";
@@ -45,5 +48,17 @@ describe("demo ticket-pack flow", () => {
       throw new Error("Expected spend to be rejected.");
     }
     expect(spend.spend.reason).toBe("insufficient_balance");
+  });
+
+  it("hydrates ticket balances from serialized demo session state", () => {
+    const store = createDemoStoreFromState();
+    const created = createDemoOrder("player_ada", "starter-ticket-pack", store);
+    completeDemoPayment(created.order.id, store);
+    fulfillDemoOrder(created.order.id, store);
+
+    const restoredStore = createDemoStoreFromState(serializeDemoStore(store));
+
+    expect(getDemoSnapshot("player_ada", restoredStore).balances.balances.ticket).toBe(10);
+    expect(spendDemoTicket("player_ada", restoredStore).snapshot.balances.balances.ticket).toBe(9);
   });
 });
