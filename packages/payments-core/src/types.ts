@@ -77,6 +77,8 @@ export interface MockPayment {
   updatedAt: string;
 }
 
+export type PaymentProvider = "mock" | "base_pay";
+
 export interface CreateMockPaymentInput {
   id?: string;
   order: GameOrder;
@@ -89,7 +91,15 @@ export interface PaymentVerificationInput {
   now?: Date;
 }
 
-export type PaymentVerificationStatus = "completed" | "pending" | "failed" | "mismatched_order";
+export type PaymentVerificationStatus =
+  | "completed"
+  | "pending"
+  | "failed"
+  | "not_found"
+  | "mismatched_order"
+  | "amount_mismatch"
+  | "recipient_mismatch"
+  | "sender_mismatch";
 
 export interface PaymentVerificationResult {
   status: PaymentVerificationStatus;
@@ -98,6 +108,41 @@ export interface PaymentVerificationResult {
   amount: string;
   currency: PaymentCurrency;
   checkedAt: string;
+  provider?: PaymentProvider;
+  sender?: string;
+  recipient?: string;
+  reason?: string;
+  testnet?: boolean;
+}
+
+export type BasePayStatusType = "pending" | "completed" | "failed" | "not_found";
+
+export interface BasePayStatus {
+  status: BasePayStatusType;
+  id: string;
+  message?: string;
+  sender?: string;
+  amount?: string;
+  recipient?: string;
+  reason?: string;
+}
+
+export interface BasePayStatusInput {
+  id: string;
+  testnet: boolean;
+}
+
+export type BasePayStatusReader = (input: BasePayStatusInput) => Promise<BasePayStatus>;
+
+export interface VerifyBasePayPaymentInput {
+  order: GameOrder;
+  paymentId: string;
+  expectedAmount: string;
+  expectedRecipient: string;
+  expectedSender?: string;
+  statusReader: BasePayStatusReader;
+  testnet?: boolean;
+  now?: Date;
 }
 
 export interface FulfillOrderInput {

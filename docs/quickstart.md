@@ -37,6 +37,30 @@ double-credit the player.
 Create the Vercel project with `apps/demo` as the project root directory. The
 demo does not require secrets for alpha mock mode.
 
+## Run the grant demo
+
+Open `/grant` to record the 1-minute grant flow:
+
+```txt
+ad monetization pain
+  -> ticket-pack order
+  -> Base Pay or recorded proof
+  -> server verification
+  -> ledger credit
+  -> duplicate retry
+  -> ticket spend
+```
+
+For real Base Pay mainnet proof, set:
+
+```bash
+NEXT_PUBLIC_BGM_RECEIVER_ADDRESS=<dedicated project receiver>
+NEXT_PUBLIC_BGM_BASE_PAY_AMOUNT=1.00
+```
+
+Without a receiver address, the real Base Pay button is disabled and the route
+can still replay the recorded proof path.
+
 For CLI-driven preview deploys:
 
 ```bash

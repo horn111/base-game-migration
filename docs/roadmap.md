@@ -19,6 +19,14 @@
 - Vercel alpha demo for ticket-pack order, mock payment, fulfillment, duplicate
   retry, and ticket spend.
 
+## Grant-ready alpha
+
+- `/grant` route that explains ad monetization migration pain for existing web
+  games.
+- Real Base Pay mainnet proof boundary with server-side verification.
+- Recorded-proof fallback for the 1-minute grant demo.
+- Grant packet with form answers, demo script, project socials, and proof link.
+
 ## v0.2 adapters
 
 - Nakama adapter for game ticket packs and internal wallet ledger fulfillment.

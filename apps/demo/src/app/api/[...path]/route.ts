@@ -1,10 +1,15 @@
 import {
   completeDemoPayment,
+  createDemoStoreFromState,
   createDemoOrder,
   fulfillDemoOrder,
+  fulfillDemoBasePayOrder,
   getDemoSnapshot,
+  replayRecordedBasePayProof,
   spendDemoTicket,
+  verifyDemoBasePayPayment,
 } from "../../../lib/demo-store";
+import { readLiveBasePayStatus } from "../../../lib/base-pay-status";
 import { createDemoStoreFromRequest, jsonWithDemoState } from "../../../lib/demo-session";
 import { jsonError } from "../../../lib/http";
 
@@ -74,6 +79,61 @@ export async function POST(request: Request, context: RouteContext) {
       }
 
       return jsonWithDemoState(fulfillDemoOrder(body.orderId, store), store);
+    }
+
+    if (route === "grant/base-pay/verify") {
+      const body = (await request.json()) as {
+        orderId?: string;
+        paymentId?: string;
+        payerAddress?: string;
+      };
+
+      if (!body.orderId || !body.paymentId) {
+        throw new Error("orderId and paymentId are required.");
+      }
+
+      return jsonWithDemoState(
+        await verifyDemoBasePayPayment(
+          {
+            orderId: body.orderId,
+            payerAddress: body.payerAddress,
+            paymentId: body.paymentId,
+            statusReader: readLiveBasePayStatus,
+          },
+          store,
+        ),
+        store,
+      );
+    }
+
+    if (route === "grant/base-pay/replay") {
+      const body = (await request.json()) as {
+        orderId?: string;
+      };
+
+      if (!body.orderId) {
+        throw new Error("orderId is required.");
+      }
+
+      return jsonWithDemoState(await replayRecordedBasePayProof(body.orderId, store), store);
+    }
+
+    if (route === "grant/fulfill") {
+      const body = (await request.json()) as {
+        orderId?: string;
+      };
+
+      if (!body.orderId) {
+        throw new Error("orderId is required.");
+      }
+
+      return jsonWithDemoState(fulfillDemoBasePayOrder(body.orderId, store), store);
+    }
+
+    if (route === "grant/reset") {
+      const resetStore = createDemoStoreFromState();
+
+      return jsonWithDemoState({ snapshot: getDemoSnapshot("player_ada", resetStore) }, resetStore);
     }
 
     if (path.length === 3 && path[0] === "players" && path[2] === "spend") {

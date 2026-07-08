@@ -3,14 +3,20 @@
 Move existing games to Base with payment verification, in-game balances,
 entitlements, and Builder Code attribution.
 
-Status: alpha implementation in progress. The repo now includes runtime
-packages, a Nakama-first adapter, and a Vercel-deployable ticket-pack demo.
+Status: grant-ready alpha in progress. The repo includes runtime packages, a
+Nakama-first adapter, a Vercel-deployable ticket-pack demo, and a grant route
+for Base Pay mainnet proof.
 
 ## Positioning
 
 Base Game Migration is a companion product for teams that already have a
 working game or game backend and want a practical path to Base-native
 monetization without rebuilding their server stack.
+
+The first use case is the painful middle of web game monetization migration:
+many games already have ad SDKs wired in, but ad monetization does not map
+cleanly to Base Pay, server-side verification, in-game ledgers, or Builder Code
+attribution.
 
 ```txt
 existing game
@@ -94,15 +100,37 @@ spend a ticket.
 
 ## Vercel demo
 
-Create the Vercel project with `apps/demo` as the project root directory. Alpha
-mock mode does not require secrets.
+Create the Vercel project with `apps/demo` as the project root directory. Mock
+mode does not require secrets.
+
+Grant demo:
+
+```txt
+https://base-game-migration.vercel.app/grant
+```
+
+For real Base Pay mainnet proof, configure:
+
+```txt
+NEXT_PUBLIC_BGM_RECEIVER_ADDRESS=<dedicated project receiver>
+NEXT_PUBLIC_BGM_BASE_PAY_AMOUNT=1.00
+```
+
+The `/grant` route also has a recorded-proof replay path so the 1-minute demo can
+be rehearsed before the mainnet smoke test.
+
+## Grant packet
+
+- Grant answers and 1-minute script: `docs/grant-submission.md`
+- Roadmap: `docs/roadmap.md`
+- Security model: `docs/security-model.md`
 
 ## Next step
 
-The next runtime update should replace mock-only payment verification with a
-real Base Pay boundary while preserving the current core interfaces:
+The next runtime update should make the grant path production-harder while
+preserving the current core interfaces:
 
-- durable payment-id uniqueness;
+- durable database-backed payment-id uniqueness;
 - durable ledger storage;
-- real BAO `createDataSuffix` / `appendDataSuffix` integration;
+- real BAO `createDataSuffix` / `appendDataSuffix` package integration;
 - Nakama runtime module packaging.

@@ -6,6 +6,9 @@ Alpha is a developer proof, not a production payment processor.
 
 - Fulfillment happens server-side.
 - Fulfillment requires a completed mock payment status.
+- Grant-mode fulfillment requires a completed Base Pay status.
+- Base Pay verification checks expected amount, expected recipient, optional
+  expected sender, and payment-id replay protection.
 - Duplicate fulfillment is ignored through an idempotency key.
 - Ledger events record player, unit, amount, direction, reason, source id, and
   balance after mutation.
@@ -14,15 +17,14 @@ Alpha is a developer proof, not a production payment processor.
 
 ## Not guaranteed in alpha
 
-- No real Base Pay settlement.
+- The default demo path still uses mock payments.
 - No custody.
-- No wallet authentication.
+- No full wallet authentication beyond optional Base Pay payer address binding.
 - No production database durability.
 - No reward eligibility decisions.
 
 ## Production upgrade path
 
-Before production use, replace mock payment verification with real Base Pay
-status checks, persist payment ids with a unique database constraint, persist
-ledger events durably, and wire the attribution intent to Base Attribution OS at
-the onchain payment boundary.
+Before production use, persist payment ids with a unique database constraint,
+persist ledger events durably, authenticate the player wallet, and wire the
+attribution intent to Base Attribution OS at the onchain payment boundary.
