@@ -15,6 +15,12 @@ interface DemoActionResult {
   snapshot: DemoSnapshot;
 }
 
+interface PaymentProofActionResult extends DemoActionResult {
+  verification: {
+    status: string;
+  };
+}
+
 async function postJson<T>(path: string, body?: unknown): Promise<T> {
   const response = await fetch(path, {
     body: body ? JSON.stringify(body) : undefined,
@@ -85,7 +91,7 @@ export function GrantDemoConsole({ initialSnapshot }: GrantDemoConsoleProps) {
     }
 
     setBasePayError(null);
-    await runAction("Opening Base Pay", async () => {
+    await runAction("Opening Base Pay and crediting tickets", async () => {
       let payment: Awaited<ReturnType<typeof pay>>;
 
       try {
@@ -102,10 +108,32 @@ export function GrantDemoConsole({ initialSnapshot }: GrantDemoConsoleProps) {
         throw error;
       }
 
-      return postJson<DemoActionResult>("/api/grant/base-pay/verify", {
+      const verified = await postJson<PaymentProofActionResult>("/api/grant/base-pay/verify", {
         orderId: latestOrder.id,
         paymentId: payment.id,
       });
+
+      if (verified.verification.status !== "completed") {
+        return verified;
+      }
+
+      return postJson<DemoActionResult>("/api/grant/fulfill", {
+        orderId: latestOrder.id,
+      });
+    });
+  }
+
+  async function replayProofAndFulfill(orderId: string) {
+    const verified = await postJson<PaymentProofActionResult>("/api/grant/base-pay/replay", {
+      orderId,
+    });
+
+    if (verified.verification.status !== "completed") {
+      return verified;
+    }
+
+    return postJson<DemoActionResult>("/api/grant/fulfill", {
+      orderId,
     });
   }
 
@@ -192,6 +220,10 @@ export function GrantDemoConsole({ initialSnapshot }: GrantDemoConsoleProps) {
             <ShieldCheck aria-hidden="true" />
             <h2>Ticket-pack order</h2>
           </div>
+          <p className="grant-smoke-note">
+            Grant smoke charges {snapshot.grant.amount} USDC for the selected pack, then credits the
+            selected ticket amount after server verification.
+          </p>
           <div className="pack-list">
             {snapshot.catalog.map((item) => (
               <button
@@ -205,7 +237,8 @@ export function GrantDemoConsole({ initialSnapshot }: GrantDemoConsoleProps) {
                   <small className="option-item-meta">{item.description}</small>
                 </span>
                 <b>
-                  {item.price.amount} {item.price.currency}
+                  {snapshot.grant.amount} {item.price.currency}
+                  <em>grant smoke</em>
                 </b>
               </button>
             ))}
@@ -256,15 +289,13 @@ export function GrantDemoConsole({ initialSnapshot }: GrantDemoConsoleProps) {
               disabled={!latestOrder || isBusy}
               onClick={() =>
                 latestOrder &&
-                runAction("Replaying recorded proof", () =>
-                  postJson<DemoActionResult>("/api/grant/base-pay/replay", {
-                    orderId: latestOrder.id,
-                  }),
+                runAction("Replaying proof and crediting tickets", () =>
+                  replayProofAndFulfill(latestOrder.id),
                 )
               }
               type="button"
             >
-              Replay recorded proof
+              Replay recorded proof + fulfill
             </button>
           </div>
           {basePayError ? (

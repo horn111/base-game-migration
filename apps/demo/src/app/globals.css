@@ -347,6 +347,17 @@ pre {
   gap: 6px;
 }
 
+.grant-smoke-note {
+  margin: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--border-radius);
+  background: var(--accent-bg);
+  color: var(--text-muted);
+  font-size: 12px;
+  line-height: 1.5;
+  padding: 10px 12px;
+}
+
 .pack {
   display: flex;
   align-items: center;
@@ -392,7 +403,10 @@ pre {
 }
 
 .pack b {
+  display: grid;
   flex: 0 0 auto;
+  gap: 1px;
+  justify-items: end;
   border-radius: var(--border-radius-sm);
   background: var(--game-bg);
   color: var(--game-text);
@@ -401,6 +415,14 @@ pre {
   font-weight: 700;
   padding: 3px 6px;
   white-space: nowrap;
+}
+
+.pack b em {
+  color: var(--game-muted);
+  font-size: 9px;
+  font-style: normal;
+  font-weight: 700;
+  text-transform: uppercase;
 }
 
 .field {
