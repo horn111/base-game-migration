@@ -37,6 +37,7 @@ export function GrantDemoConsole({ initialSnapshot }: GrantDemoConsoleProps) {
   const [playerId, setPlayerId] = useState(initialSnapshot.selectedPlayerId);
   const [catalogItemId, setCatalogItemId] = useState(initialSnapshot.catalog[0]?.id ?? "");
   const [statusText, setStatusText] = useState("Ready for grant demo");
+  const [basePayError, setBasePayError] = useState<string | null>(null);
   const [isBusy, setIsBusy] = useState(false);
   const latestOrder = snapshot.latestOrder;
   const proof = snapshot.latestBasePayProof;
@@ -83,21 +84,26 @@ export function GrantDemoConsole({ initialSnapshot }: GrantDemoConsoleProps) {
       return;
     }
 
+    setBasePayError(null);
     await runAction("Opening Base Pay", async () => {
-      const payment = await pay({
-        amount: snapshot.grant.amount,
-        dataSuffix: latestOrder.attribution.mockDataSuffix,
-        payerInfo: {
-          requests: [{ optional: true, type: "onchainAddress" }],
-        },
-        telemetry: false,
-        testnet: false,
-        to: snapshot.grant.receiverAddress,
-      });
+      let payment: Awaited<ReturnType<typeof pay>>;
+
+      try {
+        payment = await pay({
+          amount: snapshot.grant.amount,
+          telemetry: false,
+          testnet: false,
+          to: snapshot.grant.receiverAddress,
+        });
+      } catch (error) {
+        const message =
+          error instanceof Error ? error.message : "Wallet flow closed before payment.";
+        setBasePayError(message);
+        throw error;
+      }
 
       return postJson<DemoActionResult>("/api/grant/base-pay/verify", {
         orderId: latestOrder.id,
-        payerAddress: payment.payerInfoResponses?.onchainAddress,
         paymentId: payment.id,
       });
     });
@@ -261,6 +267,12 @@ export function GrantDemoConsole({ initialSnapshot }: GrantDemoConsoleProps) {
               Replay recorded proof
             </button>
           </div>
+          {basePayError ? (
+            <div className="inline-error" role="alert">
+              <strong>Base Pay did not complete</strong>
+              <span>{basePayError}</span>
+            </div>
+          ) : null}
           <dl className="proof-list">
             <div>
               <dt>Payment</dt>
@@ -357,6 +369,8 @@ export function GrantDemoConsole({ initialSnapshot }: GrantDemoConsoleProps) {
                   builderCode: snapshot.grant.builderCode,
                   note: "Create an order to preview attribution payload.",
                 },
+                attributionMode:
+                  "preview-only during grant smoke; live Base Pay uses the official minimal payment payload.",
                 basePay: proof
                   ? {
                       amount: proof.amount,

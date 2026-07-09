@@ -809,6 +809,27 @@ select:focus {
   background: var(--accent-bg);
 }
 
+.inline-error {
+  display: grid;
+  gap: 4px;
+  border: 1px solid #f1c7c7;
+  border-radius: var(--border-radius);
+  background: #fff4f4;
+  color: #8f2e2e;
+  font-size: 12px;
+  line-height: 1.45;
+  padding: 10px 12px;
+}
+
+.inline-error strong {
+  color: #732020;
+  font-size: 12px;
+}
+
+.inline-error span {
+  overflow-wrap: anywhere;
+}
+
 .proof-list {
   display: grid;
   gap: 8px;
