@@ -276,7 +276,15 @@ export function GrantDemoConsole({ initialSnapshot }: GrantDemoConsoleProps) {
           <dl className="proof-list">
             <div>
               <dt>Payment</dt>
-              <dd>{proof?.paymentId ?? "not verified"}</dd>
+              <dd className="proof-value-long">
+                {proof ? (
+                  <a href={proof.explorerUrl} rel="noreferrer" target="_blank">
+                    {proof.paymentId}
+                  </a>
+                ) : (
+                  "not verified"
+                )}
+              </dd>
             </div>
             <div>
               <dt>Status</dt>
@@ -286,6 +294,16 @@ export function GrantDemoConsole({ initialSnapshot }: GrantDemoConsoleProps) {
               <dt>Source</dt>
               <dd>{proof?.source ?? "live or recorded"}</dd>
             </div>
+            {proof ? (
+              <div>
+                <dt>Explorer</dt>
+                <dd className="proof-value-long">
+                  <a href={proof.explorerUrl} rel="noreferrer" target="_blank">
+                    {proof.explorerUrl}
+                  </a>
+                </dd>
+              </div>
+            ) : null}
           </dl>
         </section>
 
