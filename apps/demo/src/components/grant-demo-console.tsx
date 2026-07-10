@@ -2,7 +2,15 @@
 
 import { BasePayButton } from "@base-org/account-ui/react";
 import { pay } from "@base-org/account";
-import { CheckCircle2, ExternalLink, Play, RotateCcw, ShieldCheck, Ticket } from "lucide-react";
+import {
+  CheckCircle2,
+  ExternalLink,
+  Play,
+  RotateCcw,
+  ShieldCheck,
+  Star,
+  Ticket,
+} from "lucide-react";
 import { useMemo, useState } from "react";
 
 import type { DemoSnapshot } from "../lib/demo-store";
@@ -145,15 +153,19 @@ export function GrantDemoConsole({ initialSnapshot }: GrantDemoConsoleProps) {
             alt=""
             aria-hidden="true"
             className="brand-logo"
-            height="36"
+            height="48"
             src="/bgm-gamepad-logo.svg"
-            width="72"
+            width="96"
           />
           <span>Base Game Migration</span>
         </a>
         <nav className="nav-links" aria-label="Grant demo links">
           <a href="https://github.com/horn111/base-game-migration">Repo</a>
           <a href="https://x.com/debythm">Builder X</a>
+          <a className="star-button" href="https://github.com/horn111/base-game-migration">
+            <Star aria-hidden="true" />
+            <span>Star repo</span>
+          </a>
         </nav>
       </header>
 

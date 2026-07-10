@@ -80,9 +80,9 @@ export function DemoConsole({ initialSnapshot }: DemoConsoleProps) {
             alt=""
             aria-hidden="true"
             className="brand-logo"
-            height="36"
+            height="48"
             src="/bgm-gamepad-logo.svg"
-            width="72"
+            width="96"
           />
           <span>Base Game Migration</span>
         </a>

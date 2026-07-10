@@ -1,9 +1,9 @@
 <svg width="96" height="48" viewBox="0 0 96 48" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title">
   <title id="title">BGM gamepad logo</title>
-  <path d="M19.5 13H76.5C83.4036 13 89 18.5964 89 25.5V28.5C89 36.5081 82.5081 43 74.5 43C69.8793 43 65.7635 40.8399 63.1094 37.4746H32.8906C30.2365 40.8399 26.1207 43 21.5 43C13.4919 43 7 36.5081 7 28.5V25.5C7 18.5964 12.5964 13 19.5 13Z" fill="#0052FF"/>
-  <path d="M27 22V32" stroke="#FBFBFA" stroke-width="3" stroke-linecap="round"/>
-  <path d="M22 27H32" stroke="#FBFBFA" stroke-width="3" stroke-linecap="round"/>
+  <path d="M19.5 13H76.5C83.4036 13 89 18.5964 89 25.5V28.5C89 36.5081 82.5081 43 74.5 43C69.8793 43 65.7635 40.8399 63.1094 37.4746H32.8906C30.2365 40.8399 26.1207 43 21.5 43C13.4919 43 7 36.5081 7 28.5V25.5C7 18.5964 12.5964 13 19.5 13Z" stroke="#FFFFFF" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M27 22V32" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round"/>
+  <path d="M22 27H32" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round"/>
   <circle cx="68" cy="24" r="3.2" fill="#FFD166"/>
-  <circle cx="76" cy="30" r="3.2" fill="#FBFBFA"/>
-  <text x="48" y="30" text-anchor="middle" fill="#FBFBFA" font-family="JetBrains Mono, SFMono-Regular, Consolas, monospace" font-size="12" font-weight="800" letter-spacing="0">BGM</text>
+  <circle cx="76" cy="30" r="3.2" fill="#FFFFFF"/>
+  <text x="48" y="30" text-anchor="middle" fill="#FFFFFF" font-family="JetBrains Mono, SFMono-Regular, Consolas, monospace" font-size="12" font-weight="800" letter-spacing="0">BGM</text>
 </svg>
