@@ -87,6 +87,7 @@ export function DemoConsole({ initialSnapshot }: DemoConsoleProps) {
           <span>Base Game Migration</span>
         </a>
         <nav className="nav-links" aria-label="Project links">
+          <a href="/grant">Grant demo</a>
           <a href="https://github.com/horn111/base-attribution-os">Base Attribution OS</a>
           <a className="star-button" href="https://github.com/horn111/base-game-migration">
             <Star aria-hidden="true" />

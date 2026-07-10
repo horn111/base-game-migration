@@ -14,8 +14,8 @@ demo, and 1-minute recording.
 - Builder Twitter: https://x.com/debythm
 - Builder Farcaster: submitter builder Farcaster handle.
 - Base status: Yes - live on Base mainnet.
-- 1-minute demo: TBD after recording the `/grant` flow.
-- Mainnet proof: TBD after the first 1.00 USDC Base Pay smoke test.
+- 1-minute demo: upload the saved grant MP4 to a public video host before submitting.
+- Mainnet payment proof: https://basescan.org/tx/0xddc7f9bbb3b6553203ed69d6966a8dacbe35a4a928fc2d96d64816ebf0385bed
 
 If `BaseGameMigration` is unavailable for socials, use this fallback order:
 `BGMigration`, then `BaseGameMig`.

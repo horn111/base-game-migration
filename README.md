@@ -119,6 +119,8 @@ NEXT_PUBLIC_BGM_BASE_PAY_AMOUNT=1.00
 The `/grant` route also has a recorded-proof replay path so the 1-minute demo can
 be rehearsed before the mainnet smoke test.
 
+Live Base mainnet proof: [Basescan transaction](https://basescan.org/tx/0xddc7f9bbb3b6553203ed69d6966a8dacbe35a4a928fc2d96d64816ebf0385bed).
+
 ## Grant packet
 
 - Grant answers and 1-minute script: `docs/grant-submission.md`
